@@ -1,0 +1,8 @@
+StartTime = -17
+Jump:  StTime = 209 EdTime = 223
+Jump:  StTime = 225 EdTime = 236
+Jump:  StTime = 238 EdTime = 248
+Jump:  StTime = 259 EdTime = 279
+LittleState: StTime = -17 EdTime = 284
+Totaltime = 301
+Die:  Gap 
