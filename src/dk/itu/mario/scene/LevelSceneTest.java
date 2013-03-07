@@ -61,13 +61,22 @@ import dk.itu.mario.res.ResourcesManager;
 		        	if(isCustom){
 		        		MyLevelGenerator clg = new MyLevelGenerator();
 		        		GamePlay gp = new GamePlay();
-		        		gp = gp.read("player.txt");
-		        		currentLevel = (Level)clg.generateLevel(gp);
-		        		//gp.write("newplayer.txt");
+		        		//try to read in player files
+		        		try{
+		        			String path = new java.io.File(".").getCanonicalPath();
+			        		System.out.println("Path is -- "+path);
+			        		gp = gp.read("player.txt");
+			        		currentLevel = (Level)clg.generateLevel(gp);
+			        		gp.write("newplayer.txt");
+
+			        		//You can use the following commands if you want to benefit from
+		        			//	the interface containing detailed information
+		        			String detailedInfo = FileHandler.readFile("DetailedInfo.txt");
+			        	}catch(Exception e){
+			        		e.printStackTrace();
+			        	}
 		        		
-		        		//You can use the following commands if you want to benefit from
-		        		//	the interface containing detailed information
-		        		String detailedInfo = FileHandler.readFile("DetailedInfo.txt");
+		        		
 		                
 		              }
 			        	else

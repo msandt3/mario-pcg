@@ -38,7 +38,7 @@ public class MyLevel extends Level{
 		public MyLevel(int width, int height, long seed, int difficulty, int type, GamePlay playerMetrics)
 	    {
 	        this(width, height);
-	        //this.playerMetrics = playerMetrics;
+	        this.playerMetrics = playerMetrics;
 	        creat(seed, difficulty, type);
 	    }
 
@@ -60,10 +60,10 @@ public class MyLevel extends Level{
 	            //length += buildZone(length, width - length);
 				length += buildStraight(length, width-length, false);
 				length += buildStraight(length, width-length, false);
-				length += buildHillStraight(length, width-length);
-				length += buildJump(length, width-length);
-				length += buildTubes(length, width-length);
-				length += buildCannons(length, width-length);
+				//length += buildHillStraight(length, width-length);
+				//length += buildJump(length, width-length);
+				//length += buildTubes(length, width-length);
+				//length += buildCannons(length, width-length);
 	        }
 
 	        //set the end piece
@@ -217,7 +217,7 @@ public class MyLevel extends Level{
 	            {
 	                if (y >= floor)
 	                {
-	                    setBlock(x, y, GROUND);
+	                    setBlock(x, y, COIN);
 	                }
 	            }
 	        }
@@ -380,7 +380,7 @@ public class MyLevel extends Level{
 	            {
 	                if (y >= floor)
 	                {
-	                    setBlock(x, y, GROUND);
+	                    setBlock(x, y, ROCK);
 	                }
 	            }
 	        }
