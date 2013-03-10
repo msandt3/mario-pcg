@@ -44,8 +44,12 @@ public class MyLevel extends Level{
 
 	    public void creat(long seed, int difficulty, int type)
 	    {
+	        System.out.println("Player completed level in - "+playerMetrics.completionTime);
+	        if(playerMetrics.completionTime < 180)
+	        	this.difficulty = 3;
+
 	        this.type = type;
-	        this.difficulty = difficulty;
+	        //this.difficulty = difficulty;
 
 	        lastSeed = seed;
 	        random = new Random(seed);

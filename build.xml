@@ -19,18 +19,19 @@
     </copy>             
                   
   </target>
-
+  <!-- Compile the source code -->
   <target name="compile" depends="init"
         description="compile the source " >
     <!-- Compile the java code from ${src} into ${build} -->
-    <javac srcdir="${src}" destdir="${build}">
-      <!--<classpath>
-		    <fileset dir="${lib}">
-           <include name="**/*.jar" />
-        </fileset>
-      </classpath>-->
-    </javac>
+    <javac srcdir="${src}" destdir="${build}"/>
+    <!-- Copy the resources into the build directory -->
+    <copy todir="${build}">
+      <fileset dir="${basedir}" includes="*.txt"/>
+    </copy>
   </target>
+
+
+
   <target name="play" depends="compile"
         description="tests Mario whether it works" >
     <!-- Create the distribution directory -->

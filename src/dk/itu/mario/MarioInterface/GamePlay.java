@@ -64,6 +64,7 @@ public class GamePlay implements Serializable {
 			FileOutputStream fos = new FileOutputStream(fileName);
 			out =  new ObjectOutputStream(fos);
 			out.writeObject(this);
+			System.out.println("Wrote to file "+fileName);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
