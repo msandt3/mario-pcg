@@ -798,7 +798,7 @@ public class DataRecorder {
 		gpm.timeRunningRight = getTotalRightTime();
 		gpm.timeRunningLeft =  getTotalLeftTime();
 		gpm.coinsCollected =  getCoinsCollected();
-		gpm.totalCoins = level.COINS;
+		gpm.totalCoins = level.COINS+level.BLOCKS_COINS;
 		gpm.emptyBlocksDestroyed = getBlocksEmptyDestroyed();
 		gpm.totalEmptyBlocks = level.BLOCKS_EMPTY;
 		gpm.coinBlocksDestroyed = getBlocksCoinDestroyed();
@@ -819,6 +819,7 @@ public class DataRecorder {
 		gpm.percentageCoinBlocksDestroyed = ncb();//percentage of coin blocks destroyed
 		gpm.percentageEmptyBlockesDestroyed = neb();//percentage of empty blocks destroyed
 		gpm.percentagePowerBlockDestroyed = np();//percentage of power blocks destroyed
+		gpm.totalDeaths = getTotalDeaths();
 		gpm.timesOfDeathByFallingIntoGap = dg();//number of death by falling into a gap
 		gpm.timesOfDeathByRedTurtle = deaths[SpriteTemplate.RED_TURTLE];
 		gpm.timesOfDeathByGreenTurtle = deaths[SpriteTemplate.GREEN_TURTLE];
@@ -828,6 +829,7 @@ public class DataRecorder {
 		gpm.timesOfDeathByCannonBall = deaths[SpriteTemplate.CANNON_BALL];
 		gpm.timesOfDeathByChompFlower = deaths[SpriteTemplate.CHOMP_FLOWER];
 
+		gpm.totalKills = getTotalKills();
 		gpm.RedTurtlesKilled = kills[SpriteTemplate.RED_TURTLE];
 		gpm.GreenTurtlesKilled = kills[SpriteTemplate.GREEN_TURTLE];
 		gpm.GoombasKilled = kills[SpriteTemplate.GOOMPA];
@@ -1012,6 +1014,14 @@ public class DataRecorder {
 		return (double)getTotalRightTime()/(double)getTotalTime();
 	}
 
+	public int getTotalKills(){
+		int total = 0;
+		for(int i=0; i<kills.length; i++){
+			total += kills[i];
+		}
+		return total;
+	}
+
 	public double ks(){
 		if(getKillsStomp()+getKillsFire() == 0){
 			return 0;
@@ -1058,13 +1068,12 @@ public class DataRecorder {
 	public double nb(){
 		double n = 0;
 		if( level.BLOCKS_EMPTY != 0)
-			n+= getBlocksEmptyDestroyed()/level.BLOCKS_EMPTY;
+			n+= (double)getBlocksEmptyDestroyed();
 		if(level.BLOCKS_POWER != 0)
-			n+= getBlocksPowerDestroyed()/level.BLOCKS_POWER;
+			n+= (double)getBlocksPowerDestroyed();
 		if( level.BLOCKS_COINS != 0)
-			n+= getBlocksCoinDestroyed()/level.BLOCKS_COINS;
-
-		return n;
+			n+= (double)getBlocksCoinDestroyed();
+		return n/(double)(level.BLOCKS_COINS+level.BLOCKS_EMPTY+level.BLOCKS_POWER);
 	}
 
 	public double ncb(){
@@ -1083,11 +1092,18 @@ public class DataRecorder {
 
 	public double np(){
 		if( level.BLOCKS_POWER != 0)
-			return getBlocksPowerDestroyed()/level.BLOCKS_POWER;
+			return (double)getBlocksPowerDestroyed()/(double)level.BLOCKS_POWER;
 		else
 			return 0;
 	}
-
+	//gets the total number of player deaths
+	public int getTotalDeaths(){
+		int total = 0;
+		for(int i=0; i<deaths.length; i++){
+			total += deaths[i];
+		}
+		return total;
+	}
 	/**
 	 * Deaths by falling into gaps
 	 * @return

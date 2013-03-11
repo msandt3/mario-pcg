@@ -89,7 +89,7 @@ import dk.itu.mario.res.ResourcesManager;
 				}
 
 		        //level is always overground
-		        Art.startMusic(1);
+		        //Art.startMusic(1);
 
 		        paused = false;
 		        Sprite.spriteContext = this;

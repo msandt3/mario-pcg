@@ -17,8 +17,14 @@ public class MyLevel extends Level{
 	 public   int BLOCKS_POWER = 0; // the number of power blocks
 	 public   int COINS = 0; //These are the coins in boxes that Mario collect
 
+
+	 //set skill initially to zero to update after first run
+	 private static enum Skill {EXCELLENT,GOOD,AVERAGE,BAD};
+	 //player types - three for now possible to add more later
+	 private static boolean isKiller = false, isExplorer = false, isRunner=false;
+
  
-	private static Random levelSeedRandom = new Random();
+		private static Random levelSeedRandom = new Random();
 	    public static long lastSeed;
 
 	    Random random;
@@ -28,6 +34,7 @@ public class MyLevel extends Level{
 	    private int type;
 		private int gaps;
 		private GamePlay playerMetrics;
+		private Skill playerSkill;
 		
 		public MyLevel(int width, int height)
 	    {
@@ -39,17 +46,19 @@ public class MyLevel extends Level{
 	    {
 	        this(width, height);
 	        this.playerMetrics = playerMetrics;
+	        this.playerSkill = Skill.AVERAGE;
 	        creat(seed, difficulty, type);
 	    }
 
 	    public void creat(long seed, int difficulty, int type)
 	    {
-	        System.out.println("Player completed level in - "+playerMetrics.completionTime);
-	        if(playerMetrics.completionTime < 180)
-	        	this.difficulty = 3;
+	        //now lets evaluate the player
+	        evaluatePlayer();
+	        System.out.println("Player skill is - "+playerSkill);
+	        
 
 	        this.type = type;
-	        //this.difficulty = difficulty;
+	        this.difficulty = 0;
 
 	        lastSeed = seed;
 	        random = new Random(seed);
@@ -64,10 +73,10 @@ public class MyLevel extends Level{
 	            //length += buildZone(length, width - length);
 				length += buildStraight(length, width-length, false);
 				length += buildStraight(length, width-length, false);
-				//length += buildHillStraight(length, width-length);
-				//length += buildJump(length, width-length);
-				//length += buildTubes(length, width-length);
-				//length += buildCannons(length, width-length);
+				length += buildHillStraight(length, width-length);
+				length += buildJump(length, width-length);
+				length += buildTubes(length, width-length);
+				length += buildCannons(length, width-length);
 	        }
 
 	        //set the end piece
@@ -221,12 +230,12 @@ public class MyLevel extends Level{
 	            {
 	                if (y >= floor)
 	                {
-	                    setBlock(x, y, COIN);
+	                    setBlock(x, y, GROUND);
 	                }
 	            }
 	        }
 
-	        addEnemyLine(xo + 1, xo + length - 1, floor - 1);
+	        //addEnemyLine(xo + 1, xo + length - 1, floor - 1);
 
 	        int h = floor;
 
@@ -254,7 +263,7 @@ public class MyLevel extends Level{
 	                {
 	                    occupied[xxo - xo] = true;
 	                    occupied[xxo - xo + l] = true;
-	                    addEnemyLine(xxo, xxo + l, h - 1);
+	                    //addEnemyLine(xxo, xxo + l, h - 1);
 	                    if (random.nextInt(4) == 0)
 	                    {
 	                        decorate(xxo - 1, xxo + l + 1, h);
@@ -367,7 +376,7 @@ public class MyLevel extends Level{
 
 	    private int buildStraight(int xo, int maxLength, boolean safe)
 	    {
-	        int length = random.nextInt(10) + 2;
+	        int length = random.nextInt(10-this.difficulty) + 2;
 
 	        if (safe)
 	        	length = 10 + random.nextInt(5);
@@ -384,7 +393,7 @@ public class MyLevel extends Level{
 	            {
 	                if (y >= floor)
 	                {
-	                    setBlock(x, y, ROCK);
+	                    setBlock(x, y, GROUND);
 	                }
 	            }
 	        }
@@ -410,7 +419,7 @@ public class MyLevel extends Level{
 	        boolean rocks = true;
 
 	        //add an enemy line above the box
-	        addEnemyLine(xStart + 1, xLength - 1, floor - 1);
+	        //addEnemyLine(xStart + 1, xLength - 1, floor - 1);
 
 	        int s = random.nextInt(4);
 	        int e = random.nextInt(4);
@@ -423,23 +432,27 @@ public class MyLevel extends Level{
 	                }
 	            }
 	        }
-
+	        //random start and end offsets
 	        s = random.nextInt(4);
 	        e = random.nextInt(4);
 	        
 	        //this fills the set of blocks and the hidden objects inside them
 	        if (floor - 4 > 0)
 	        {
+	            //if we're going to populate a series of more than two blocks
 	            if ((xLength - 1 - e) - (xStart + 1 + s) > 2)
 	            {
 	                for (int x = xStart + 1 + s; x < xLength - 1 - e; x++)
 	                {
+	                    //this is pretty useless since its set to true
 	                    if (rocks)
 	                    {
+	                        //if were past xStart + 1 && before xLength-2 && 1/3 chance of true
 	                        if (x != xStart + 1 && x != xLength - 2 && random.nextInt(3) == 0)
 	                        {
 	                            if (random.nextInt(4) == 0)
 	                            {
+	                                //fills block with mushroom
 	                                setBlock(x, floor - 4, BLOCK_POWERUP);
 	                                BLOCKS_POWER++;
 	                            }
@@ -449,19 +462,26 @@ public class MyLevel extends Level{
 	                                BLOCKS_COINS++;
 	                            }
 	                        }
+	                        //otherwise 25% chance
 	                        else if (random.nextInt(4) == 0)
 	                        {
+	                        	//25 percent chance
 	                            if (random.nextInt(4) == 0)
 	                            {
+	                                //fire flower
 	                                setBlock(x, floor - 4, (byte) (2 + 1 * 16));
+	                                BLOCKS_POWER++;
 	                            }
 	                            else
 	                            {
+	                                //coin
 	                                setBlock(x, floor - 4, (byte) (1 + 1 * 16));
+	                                BLOCKS_COINS++;
 	                            }
 	                        }
 	                        else
 	                        {
+	                            //otherwise empty block
 	                            setBlock(x, floor - 4, BLOCK_EMPTY);
 	                            BLOCKS_EMPTY++;
 	                        }
@@ -656,5 +676,92 @@ public class MyLevel extends Level{
 
 	      }
 
+	    public void evaluatePlayer(){
+	    	//first lets evaluate the player skill
+
+	    	//get the ratio of completion time to total time
+	    	//System.out.println(playerMetrics.completionTime+"/"+playerMetrics.totalTime);
+	    	double timeRatio = (double)playerMetrics.completionTime/(double)playerMetrics.totalTime;
+	    	System.out.println("Time ratio - "+timeRatio);
+	    	double deathRatio = (double)(3 - playerMetrics.totalDeaths)/(double)(3);
+	    	System.out.println("Death ratio - "+deathRatio);
+
+	    	double skillRatio = deathRatio * timeRatio;
+	    	System.out.println("Skill ratio "+skillRatio);
+
+	    	//the closer this is to one, the better
+	    	if(skillRatio > 0.75){
+	    		playerSkill = Skill.EXCELLENT;
+	    	}
+	    	else if(skillRatio > 0.5 && skillRatio < 0.75){
+	    		playerSkill = Skill.GOOD;
+	    	}
+	    	else if(skillRatio < 0.5 && skillRatio > 0.25){
+	    		playerSkill = Skill.AVERAGE;
+	    	}
+	    	else
+	    		playerSkill = Skill.BAD;
+
+	    	//now we need to evaluate what sort of player we have
+	    	evaluateKiller();
+	    	evaluateExplorer();
+	    	evaluateRunner();
+	    }
+
+	    public void evaluateKiller(){
+	    	double killRatio = (double)playerMetrics.totalKills/(double)playerMetrics.totalEnemies;
+
+	    	if(killRatio > 0.667)
+	    		isKiller = true;
+	    	else
+	    		isKiller = false;
+	    }
+
+	    public void evaluateExplorer(){
+	    	/**
+	    	int totalblocks = playerMetrics.totalEmptyBlocks+playerMetrics.totalCoinBlocks+playerMetrics.totalpowerBlocks;
+	    	System.out.println("Total blocks - "+totalblocks);
+	    	int totaldestroyed = playerMetrics.emptyBlocksDestroyed+playerMetrics.coinBlocksDestroyed+playerMetrics.powerBlocksDestroyed;
+	    	System.out.println("Total destroyed - "+totaldestroyed);
+			**/
+	    	double blockRatio = playerMetrics.percentageBlocksDestroyed;
+
+
+	    	//System.out.println("Total coins - "+playerMetrics.totalCoins);
+	    	//System.out.println("Coins Collected - "+playerMetrics.coinsCollected);
+	    	double coinRatio = (double)playerMetrics.coinsCollected/(double)playerMetrics.totalCoins;
+
+	    	//System.out.println("Block ratio - "+blockRatio);
+	    	//System.out.println("Coin ratio - "+coinRatio);
+
+	    	double exploreRatio = blockRatio * coinRatio;
+	    	//System.out.println("Explore ratio - "+exploreRatio);
+
+	    	if(exploreRatio > 0.6)
+	    		isExplorer = true;
+	    	else
+	    		isExplorer = false;
+
+	    }
+
+	    public void evaluateRunner(){
+	    	double avgRunTime = (double)playerMetrics.timeSpentRunning/(double)playerMetrics.totalDeaths;
+	    	double avgTime = (double)playerMetrics.totalTime/(double)playerMetrics.totalDeaths;
+	    	System.out.println("Completion time - "+playerMetrics.completionTime);
+	    	System.out.println("Average time - "+avgTime);
+	    	System.out.println("Avg Run time - "+avgRunTime);
+	    	System.out.println("completion time - "+playerMetrics.completionTime);
+	    	
+
+	    	double runRatio = avgRunTime/avgTime;
+	    	System.out.println("Run ratio - "+runRatio);
+
+
+	    	//temporary speed run decision
+	    	if(runRatio >= 0.1)
+	    		isRunner = true;
+	    	else
+	    		isRunner = false;
+	    }
 
 }
