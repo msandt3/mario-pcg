@@ -264,6 +264,8 @@ public class MyLevel extends Level{
 	                    occupied[xxo - xo] = true;
 	                    occupied[xxo - xo + l] = true;
 	                    //addEnemyLine(xxo, xxo + l, h - 1);
+
+	                    //coins more likely if the player type is explorer
 	                    if (isExplorer)
 	                    {
 	                        if(random.nextInt(2) == 0){
@@ -271,6 +273,7 @@ public class MyLevel extends Level{
 		                        keepGoing = false;
 		                    }
 	                    }
+	                    //otherwise standard probability
 	                    else if(random.nextInt(4) == 0){
 	                    	decorate(xxo - 1, xxo + l + 1, h);
 		                    keepGoing = false;
@@ -406,10 +409,18 @@ public class MyLevel extends Level{
 
 	        if (!safe)
 	        {
-	            if (length > 5)
-	            {
-	                decorate(xo, xo + length, floor);
-	            }
+	            if(isExplorer){
+		            if (length > 5)
+		            {
+		                decorate(xo, xo + length, floor);
+		            }
+		        }
+		        else if(random.nextInt(2) == 0){
+		        	if (length > 5)
+		            {
+		                decorate(xo, xo + length, floor);
+		            }
+		        }
 	        }
 
 	        return length;
@@ -427,8 +438,17 @@ public class MyLevel extends Level{
 	        //add an enemy line above the box
 	        //addEnemyLine(xStart + 1, xLength - 1, floor - 1);
 
-	        int s = random.nextInt(4);
-	        int e = random.nextInt(4);
+	        //longer coin sequences for an explorer
+	        int s;
+	        int e;
+	        if(isExplorer){
+	        	s = random.nextInt(4);
+	        	e = random.nextInt(4);
+	        }
+	        else{
+	        	s = random.nextInt(4)+random.nextInt(2);
+	        	e = random.nextInt(4)+random.nextInt(2);
+	        }
 
 	        if (floor - 2 > 0){
 	            if ((xLength - 1 - e) - (xStart + 1 + s) > 1){
@@ -438,9 +458,15 @@ public class MyLevel extends Level{
 	                }
 	            }
 	        }
-	        //random start and end offsets
-	        s = random.nextInt(4);
-	        e = random.nextInt(4);
+	        //longer block sequences for the explorer
+	        if(isExplorer){
+	        	s = random.nextInt(4);
+	        	e = random.nextInt(4);
+	        }
+	        else{
+	        	s = random.nextInt(4)+random.nextInt(2);
+	        	e = random.nextInt(4)+random.nextInt(2);
+	        }
 	        
 	        //this fills the set of blocks and the hidden objects inside them
 	        if (floor - 4 > 0)
