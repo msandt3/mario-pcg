@@ -264,10 +264,16 @@ public class MyLevel extends Level{
 	                    occupied[xxo - xo] = true;
 	                    occupied[xxo - xo + l] = true;
 	                    //addEnemyLine(xxo, xxo + l, h - 1);
-	                    if (random.nextInt(4) == 0)
+	                    if (isExplorer)
 	                    {
-	                        decorate(xxo - 1, xxo + l + 1, h);
-	                        keepGoing = false;
+	                        if(random.nextInt(2) == 0){
+		                        decorate(xxo - 1, xxo + l + 1, h);
+		                        keepGoing = false;
+		                    }
+	                    }
+	                    else if(random.nextInt(4) == 0){
+	                    	decorate(xxo - 1, xxo + l + 1, h);
+		                    keepGoing = false;
 	                    }
 	                    for (int x = xxo; x < xxo + l; x++)
 	                    {
@@ -703,8 +709,11 @@ public class MyLevel extends Level{
 	    		playerSkill = Skill.BAD;
 
 	    	//now we need to evaluate what sort of player we have
+	    	System.out.println("~~~~~~~~~~~~~~~~");
 	    	evaluateKiller();
+	    	System.out.println("~~~~~~~~~~~~~~~~");
 	    	evaluateExplorer();
+	    	System.out.println("~~~~~~~~~~~~~~~~");
 	    	evaluateRunner();
 	    }
 
@@ -718,17 +727,15 @@ public class MyLevel extends Level{
 	    }
 
 	    public void evaluateExplorer(){
-	    	/**
 	    	int totalblocks = playerMetrics.totalEmptyBlocks+playerMetrics.totalCoinBlocks+playerMetrics.totalpowerBlocks;
 	    	System.out.println("Total blocks - "+totalblocks);
 	    	int totaldestroyed = playerMetrics.emptyBlocksDestroyed+playerMetrics.coinBlocksDestroyed+playerMetrics.powerBlocksDestroyed;
 	    	System.out.println("Total destroyed - "+totaldestroyed);
-			**/
 	    	double blockRatio = playerMetrics.percentageBlocksDestroyed;
 
 
-	    	//System.out.println("Total coins - "+playerMetrics.totalCoins);
-	    	//System.out.println("Coins Collected - "+playerMetrics.coinsCollected);
+	    	System.out.println("Total coins - "+playerMetrics.totalCoins);
+	    	System.out.println("Coins Collected - "+playerMetrics.coinsCollected);
 	    	double coinRatio = (double)playerMetrics.coinsCollected/(double)playerMetrics.totalCoins;
 
 	    	//System.out.println("Block ratio - "+blockRatio);
@@ -737,10 +744,12 @@ public class MyLevel extends Level{
 	    	double exploreRatio = blockRatio * coinRatio;
 	    	//System.out.println("Explore ratio - "+exploreRatio);
 
-	    	if(exploreRatio > 0.6)
+	    	if(exploreRatio > 0.4)
 	    		isExplorer = true;
 	    	else
 	    		isExplorer = false;
+
+	    	System.out.println("Explorer status - "+isExplorer); 
 
 	    }
 
