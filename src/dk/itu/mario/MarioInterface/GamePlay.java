@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class GamePlay implements Serializable {
 		
 	private static final long serialVersionUID = 1L;
-	
+	public int difficulty; //difficulty of last level
 	public int completionTime; //counts only the current run on the level, excluding death games
 	public int totalTime;//sums all the time, including from previous games if player died
 	public int jumpsNumber; // total number of jumps

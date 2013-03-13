@@ -702,7 +702,15 @@ public class RandomLevel extends Level{
 	    	
 	        return clone;
 
-	      }
+	    }
+
+	    public int getDifficulty(){
+	    	return this.difficulty;
+	    }
+
+	    public void setDifficulty(int diff){
+	    	this.difficulty = diff;
+	    }
 
 
 }

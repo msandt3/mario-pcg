@@ -23,6 +23,9 @@ public class MyLevel extends Level{
 	 //player types - three for now possible to add more later
 	 private static boolean isKiller = false, isExplorer = false, isRunner=false;
 
+	 //explore value
+	 private static int exploreVal = 0;
+
  
 		private static Random levelSeedRandom = new Random();
 	    public static long lastSeed;
@@ -53,12 +56,13 @@ public class MyLevel extends Level{
 	    public void creat(long seed, int difficulty, int type)
 	    {
 	        //now lets evaluate the player
+	        this.difficulty = playerMetrics.difficulty;
 	        evaluatePlayer();
 	        System.out.println("Player skill is - "+playerSkill);
 	        
 
 	        this.type = type;
-	        this.difficulty = 0;
+	        
 
 	        lastSeed = seed;
 	        random = new Random(seed);
@@ -268,7 +272,7 @@ public class MyLevel extends Level{
 	                    //coins more likely if the player type is explorer
 	                    if (isExplorer)
 	                    {
-	                        if(random.nextInt(2) == 0){
+	                        if(random.nextInt(6 - exploreVal) == 0){
 		                        decorate(xxo - 1, xxo + l + 1, h);
 		                        keepGoing = false;
 		                    }
@@ -442,8 +446,8 @@ public class MyLevel extends Level{
 	        int s;
 	        int e;
 	        if(isExplorer){
-	        	s = random.nextInt(4);
-	        	e = random.nextInt(4);
+	        	s = random.nextInt(6-exploreVal);
+	        	e = random.nextInt(6-exploreVal);
 	        }
 	        else{
 	        	s = random.nextInt(4)+random.nextInt(2);
@@ -460,8 +464,8 @@ public class MyLevel extends Level{
 	        }
 	        //longer block sequences for the explorer
 	        if(isExplorer){
-	        	s = random.nextInt(4);
-	        	e = random.nextInt(4);
+	        	s = random.nextInt(6-exploreVal);
+	        	e = random.nextInt(6-exploreVal);
 	        }
 	        else{
 	        	s = random.nextInt(4)+random.nextInt(2);
@@ -687,7 +691,7 @@ public class MyLevel extends Level{
 	    public RandomLevel clone() throws CloneNotSupportedException {
 
 	    	RandomLevel clone=new RandomLevel(width, height);
-
+	    	clone.setDifficulty(this.difficulty);
 	    	clone.xExit = xExit;
 	    	clone.yExit = yExit;
 	    	byte[][] map = getMap();
@@ -724,18 +728,29 @@ public class MyLevel extends Level{
 	    	//the closer this is to one, the better
 	    	if(skillRatio > 0.75){
 	    		playerSkill = Skill.EXCELLENT;
+	    		this.difficulty += 2;
 	    	}
 	    	else if(skillRatio > 0.5 && skillRatio < 0.75){
 	    		playerSkill = Skill.GOOD;
+	    		this.difficulty++;
 	    	}
 	    	else if(skillRatio < 0.5 && skillRatio > 0.25){
 	    		playerSkill = Skill.AVERAGE;
 	    	}
-	    	else
+	    	else{
 	    		playerSkill = Skill.BAD;
+	    		this.difficulty -= 1;
+	    	}
+
+	    	//clamp difficulty to 0
+	    	if(this.difficulty < 0){
+	    		this.difficulty = 0;
+	    	}
 
 	    	//now we need to evaluate what sort of player we have
 	    	System.out.println("~~~~~~~~~~~~~~~~");
+	    	System.out.println("Previous level difficulty "+playerMetrics.difficulty);
+	    	System.out.println("Current difficulty - "+this.difficulty);
 	    	evaluateKiller();
 	    	System.out.println("~~~~~~~~~~~~~~~~");
 	    	evaluateExplorer();
@@ -753,27 +768,23 @@ public class MyLevel extends Level{
 	    }
 
 	    public void evaluateExplorer(){
-	    	int totalblocks = playerMetrics.totalEmptyBlocks+playerMetrics.totalCoinBlocks+playerMetrics.totalpowerBlocks;
-	    	System.out.println("Total blocks - "+totalblocks);
-	    	int totaldestroyed = playerMetrics.emptyBlocksDestroyed+playerMetrics.coinBlocksDestroyed+playerMetrics.powerBlocksDestroyed;
-	    	System.out.println("Total destroyed - "+totaldestroyed);
 	    	double blockRatio = playerMetrics.percentageBlocksDestroyed;
-
-
-	    	System.out.println("Total coins - "+playerMetrics.totalCoins);
-	    	System.out.println("Coins Collected - "+playerMetrics.coinsCollected);
 	    	double coinRatio = (double)playerMetrics.coinsCollected/(double)playerMetrics.totalCoins;
-
-	    	//System.out.println("Block ratio - "+blockRatio);
-	    	//System.out.println("Coin ratio - "+coinRatio);
-
 	    	double exploreRatio = blockRatio * coinRatio;
-	    	//System.out.println("Explore ratio - "+exploreRatio);
-
-	    	if(exploreRatio > 0.4)
+	    	System.out.println("Explore ratio - "+exploreRatio);
+	    	if(exploreRatio > 0.25)
 	    		isExplorer = true;
 	    	else
 	    		isExplorer = false;
+
+	    	if(exploreRatio > 0.75)
+	    		exploreVal = 4;
+	    	else if(exploreRatio > 0.5)
+	    		exploreVal = 3;
+	    	else if(exploreRatio > 0.25)
+	    		exploreVal = 2;
+	    	else
+	    		exploreVal = 1;
 
 	    	System.out.println("Explorer status - "+isExplorer); 
 
@@ -797,6 +808,10 @@ public class MyLevel extends Level{
 	    		isRunner = true;
 	    	else
 	    		isRunner = false;
+	    }
+
+	    public int getDifficulty(){
+	    	return this.difficulty;
 	    }
 
 }

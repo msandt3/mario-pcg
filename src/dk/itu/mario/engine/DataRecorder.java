@@ -788,6 +788,7 @@ public class DataRecorder {
 
 	public void fillGamePlayMetrics(RandomLevel level){
         GamePlay gpm = new GamePlay();
+        gpm.difficulty = level.getDifficulty();
 		gpm.completionTime = getCompletionTime();
 		gpm.totalTime = getTotalTime();////sums all the time, including from previous games if player died
 		gpm.jumpsNumber = getTimesJumped();
