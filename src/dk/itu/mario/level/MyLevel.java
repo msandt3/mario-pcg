@@ -440,7 +440,7 @@ public class MyLevel extends Level{
 	        boolean rocks = true;
 
 	        //add an enemy line above the box
-	        //addEnemyLine(xStart + 1, xLength - 1, floor - 1);
+	        addEnemyLine(xStart + 1, xLength - 1, floor - 1);
 
 	        //longer coin sequences for an explorer
 	        int s;
