@@ -316,6 +316,7 @@ public class MyLevel extends Level{
 
 	        for (int x = x0; x < x1; x++)
 	        {
+	        	//enemy generation rate linked to percentage enemies killed in last level
 	        	int thresh = random.nextInt(55 - (int)(5*killerVal));
 	            if (thresh < difficulty)
 	            {
@@ -809,14 +810,21 @@ public class MyLevel extends Level{
 	    }
 
 	    private int generateRandomEnemy(int difficulty){
-	    	if(difficulty < 1)
-	    		return Enemy.ENEMY_GOOMBA;
-	    	else if(difficulty < 3)
-	    		return random.nextInt(2);
-	    	else{
-	    		System.out.println(random.nextGaussian());
-	    		return random.nextInt(3);
+	    	int type = Enemy.ENEMY_GOOMBA;
+
+	    	if(random.nextInt((int)Math.pow(difficulty,1.75)) < difficulty){
+	    		type = Enemy.ENEMY_GOOMBA;
 	    	}
+	    	else if(random.nextInt((int)Math.pow(difficulty,1.65)) < difficulty){
+	    		type = random.nextInt(2);
+	    	}
+	    	else if(random.nextInt((int)Math.pow(difficulty,1.5)) < difficulty){
+	    		type = 3;
+	    	}
+	    	else{
+	    		type = Enemy.ENEMY_GOOMBA;
+	    	}
+	    	return type;
 
 	    }
 
