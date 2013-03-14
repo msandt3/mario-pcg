@@ -75,14 +75,55 @@ public class MyLevel extends Level{
 	        //create all of the medium sections
 	        while (length < width - 64)
 	        {
-	            //length += buildZone(length, width - length);
-				length += buildStraight(length, width-length, false);
-				length += buildStraight(length, width-length, false);
-				length += buildHillStraight(length, width-length);
-				length += buildJump(length, width-length);
-				length += buildTubes(length, width-length);
-				length += buildCannons(length, width-length);
+	        	int choice;
+	        	if (this.difficulty <= 3) {
+	        		System.out.println("Building Easy");
+	        		length += buildEasy(length);
+	        	}
+	        	else if (this.difficulty > 3 && this.difficulty <= 5) {
+	        		choice = random.nextInt(2);
+	        		if (choice == 0) {
+	        			System.out.println("Building Easy");
+	        			length += buildEasy(length);
+	        		}
+	        		else if (choice == 1) {
+	        			System.out.println("Building Medium");
+	        			length += buildMedium(length);
+	        		}
+	        	}
+	        	else if (this.difficulty > 5 && this.difficulty <=7) {
+	        		System.out.println("Building Medium");
+	        		length += buildMedium(length);
+	        	}
+	        	else if (this.difficulty > 7 && this.difficulty <= 10) {
+	        		choice = random.nextInt(2);
+	        		if (choice == 0) {
+	        			System.out.println("Building Medium");
+	        			length += buildMedium(length);
+	        		}
+	        		else if (choice == 1) {
+	        			System.out.println("Building Hard");
+	        			length += buildHard(length);
+	        		}
+	        	}
+	        	else {
+	        		System.out.println("Building Hard");
+	        		length += buildHard(length);
+	        	}
+	            //if ((length + buildEasy(length)) > width - 64) {
+	            	//buildStraight(length,width-length,false);
+	            //}
+	        	//length += buildZone(length, width - length);
+				//length += buildStraight(length, width-length, false);
+				//length += buildStraight(length, width-length, false);
+				//length += buildHillStraight(length, width-length);
+				//length += buildJump(length, width-length);
+	        	length += buildEasy(length);
+				//length += buildTubes(length, width-length);
+				//length += buildCannons(length, width-length);
 	        }
+	        
+	        
 
 	        //set the end piece
 	        int floor = height - 1 - random.nextInt(4);
@@ -125,6 +166,189 @@ public class MyLevel extends Level{
 
 	        fixWalls();
 
+	    }
+	    
+	    private int buildEasy(int length) {
+	    	int choice = random.nextInt(5);
+	    	if (choice == 1) {
+	    		return buildEasy1(length);
+	    	}
+	    	else if (choice == 2) {
+	    		return buildEasy2(length);
+	    	}
+	    	else if (choice == 3) {
+	    		return buildEasy3(length);
+	    	}
+	    	else if (choice == 4) {
+	    		return buildEasy4(length);
+	    	}
+	    	else {
+	    		return buildEasy5(length);
+	    	}
+	    }
+	    
+	    private int buildMedium(int length) {
+	    	int choice = random.nextInt(5);
+	    	if (choice == 1) {
+	    		return buildMedium1(length);
+	    	}
+	    	else if (choice == 2) {
+	    		return buildMedium2(length);
+	    	}
+	    	else if (choice == 3) {
+	    		return buildMedium3(length);
+	    	}
+	    	else if (choice == 4) {
+	    		return buildMedium4(length);
+	    	}
+	    	else {
+	    		return buildMedium5(length);
+	    	}
+	    }
+	    
+	    private int buildHard(int length) {
+	    	int choice = random.nextInt(5);
+	    	if (choice == 1) {
+	    		return buildHard1(length);
+	    	}
+	    	else if (choice == 2) {
+	    		return buildHard2(length);
+	    	}
+	    	else if (choice == 3) {
+	    		return buildHard3(length);
+	    	}
+	    	else if (choice == 4) {
+	    		return buildHard4(length);
+	    	}
+	    	else {
+	    		return buildHard5(length);
+	    	}
+	    }
+	    
+	    private int buildEasy1(int length) {
+	    	int poop = 0;
+	    	poop += buildStraight(length, width-length, false);
+	    	poop += buildHillStraight(length+poop, width-length);
+	    	poop += buildTubes(length+poop, width-length);
+	    	return poop;
+	    }
+	    
+	    private int buildEasy2(int length) {
+	    	int poop = 0;
+	    	poop += buildTubes(length, width-length);
+	    	poop += buildStraight(length + poop, width-length, false);
+	    	poop += buildTubes(length+poop, width-length);
+	    	return poop;
+	    }
+	    
+	    private int buildEasy3(int length) {
+	    	int poop = 0;
+	    	poop += buildHillStraight(length, width-length);
+	    	poop += buildStraight(length+poop, width-length, false);
+	    	poop += buildHillStraight(length+poop, width-length);
+	    	return poop;
+	    }
+	    
+	    private int buildEasy4(int length) {
+	    	int poop = 0;
+	    	poop += buildStraight(length, width-length, false);
+	    	poop += buildTubes(length+poop, width-length);
+	    	poop += buildHillStraight(length+poop,width-length);
+	    	return poop;
+	    }
+	    
+	    private int buildEasy5(int length) {
+	    	int poop = 0;
+	    	poop += buildTubes(length,width-length);
+	    	poop += buildHillStraight(length+poop,width-length);
+	    	poop += buildHillStraight(length+poop,width-length);
+	    	return poop;
+	    }
+	    
+	    private int buildMedium1(int length) {
+	    	int poop = 0;
+	    	poop += buildJump(length, width-length);
+	    	poop += buildHillStraight(length+poop,width-length);
+	    	poop += buildCannons(length+poop,width-length);
+	    	return poop;
+	    }
+	    
+	    private int buildMedium2(int length) {
+	    	int poop = 0;
+	    	poop += buildStraight(length,width-length,false);
+	    	poop += buildJump(length+poop,width-length);
+	    	poop += buildTubes(length+poop,width-length);
+	    	return poop;
+	    }
+	    
+	    private int buildMedium3(int length) {
+	    	int poop = 0;
+	    	poop += buildCannons(length,width-length);
+	    	poop += buildHillStraight(length+poop,width-length);
+	    	poop += buildTubes(length+poop, width-length);
+	    	return poop;
+	    }
+	    
+	    private int buildMedium4(int length) {
+	    	int poop = 0;
+	    	poop += buildHillStraight(length,width-length);
+	    	poop += buildCannons(length+poop,width-length);
+	    	poop += buildStraight(length+poop,width-length,false);
+	    	return poop;
+	    }
+	    
+	    private int buildMedium5(int length) {
+	    	int poop = 0;
+	    	poop += buildJump(length,width-length);
+	    	poop += buildHillStraight(length+poop,width-length);
+	    	poop += buildJump(length+poop,width-length);
+	    	return poop;
+	    }
+	    
+	    private int buildHard1(int length) {
+	    	int poop = 0;
+	    	poop += buildStraight(length, width-length, false);
+	    	poop += buildJump(length, width-length);
+	    	poop += buildHillStraight(length+poop, width-length);
+	    	poop += buildCannons(length+poop, width-length);
+	    	poop += buildJump(length+poop, width-length);
+	    	poop += buildCannons(length+poop, width-length);
+	    	return poop;
+	    }
+	    
+	    private int buildHard2(int length) {
+	    	int poop = 0;
+	    	poop += buildJump(length,width-length);
+	    	poop += buildCannons(length+4,width-length);
+	    	//addEnemyLine(length, length-width, 20);
+	    	poop += buildCannons(length+poop,width-length);
+	    	return poop;
+	    }
+	    
+	    private int buildHard3(int length) {
+	    	int poop = 0;
+	    	poop += buildJump(length,width-length);
+	    	poop += buildHillStraight(length+poop, width-length);
+	    	poop += buildJump(length+poop,width-length);
+	    	return poop;
+	    }
+	    
+	    private int buildHard4(int length) {
+	    	int poop = 0;
+	    	poop += buildTubes(length, width-length);
+	    	poop += buildJump(length+poop,width-length);
+	    	poop += buildTubes(length+poop,width-length);
+	    	poop += buildCannons(length,width-length);
+	    	return poop;
+	    }
+	    
+	    private int buildHard5(int length) {
+	    	int poop = 0;
+	    	poop += buildJump(length, width-length);
+	    	poop += buildJump(length+poop, width-length);
+	    	poop += buildHillStraight(length+poop, width-length);
+	    	poop += buildTubes(length+poop - 15, width-length);
+	    	return poop;
 	    }
 
 
