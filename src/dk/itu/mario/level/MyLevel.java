@@ -25,6 +25,7 @@ public class MyLevel extends Level{
 
 	 //explore value
 	 private static int exploreVal = 0;
+	 private static double killerVal = 0;
 
  
 		private static Random levelSeedRandom = new Random();
@@ -239,7 +240,7 @@ public class MyLevel extends Level{
 	            }
 	        }
 
-	        //addEnemyLine(xo + 1, xo + length - 1, floor - 1);
+	        addEnemyLine(xo + 1, xo + length - 1, floor - 1);
 
 	        int h = floor;
 
@@ -267,7 +268,7 @@ public class MyLevel extends Level{
 	                {
 	                    occupied[xxo - xo] = true;
 	                    occupied[xxo - xo + l] = true;
-	                    //addEnemyLine(xxo, xxo + l, h - 1);
+	                    addEnemyLine(xxo, xxo + l, h - 1);
 
 	                    //coins more likely if the player type is explorer
 	                    if (isExplorer)
@@ -312,20 +313,14 @@ public class MyLevel extends Level{
 
 	    private void addEnemyLine(int x0, int x1, int y)
 	    {
+
 	        for (int x = x0; x < x1; x++)
 	        {
-	            if (random.nextInt(35) < difficulty + 1)
+	        	int thresh = random.nextInt(55 - (int)(5*killerVal));
+	            if (thresh < difficulty)
 	            {
-	                int type = random.nextInt(4);
+	            	type = generateRandomEnemy(difficulty);
 
-	                if (difficulty < 1)
-	                {
-	                    type = Enemy.ENEMY_GOOMBA;
-	                }
-	                else if (difficulty < 3)
-	                {
-	                    type = random.nextInt(3);
-	                }
 
 	                setSpriteTemplate(x, y, new SpriteTemplate(type, random.nextInt(35) < difficulty));
 	                ENEMIES++;
@@ -440,7 +435,7 @@ public class MyLevel extends Level{
 	        boolean rocks = true;
 
 	        //add an enemy line above the box
-	        //addEnemyLine(xStart + 1, xLength - 1, floor - 1);
+	        addEnemyLine(xStart + 1, xLength - 1, floor - 1);
 
 	        //longer coin sequences for an explorer
 	        int s;
@@ -760,11 +755,10 @@ public class MyLevel extends Level{
 
 	    public void evaluateKiller(){
 	    	double killRatio = (double)playerMetrics.totalKills/(double)playerMetrics.totalEnemies;
-
-	    	if(killRatio > 0.667)
-	    		isKiller = true;
-	    	else
-	    		isKiller = false;
+	    	
+	    		//isKiller = true;
+	    	killerVal = killRatio;
+	    	System.out.println("Kill val is - "+killerVal);
 	    }
 
 	    public void evaluateExplorer(){
@@ -812,6 +806,18 @@ public class MyLevel extends Level{
 
 	    public int getDifficulty(){
 	    	return this.difficulty;
+	    }
+
+	    private int generateRandomEnemy(int difficulty){
+	    	if(difficulty < 1)
+	    		return Enemy.ENEMY_GOOMBA;
+	    	else if(difficulty < 3)
+	    		return random.nextInt(2);
+	    	else{
+	    		System.out.println(random.nextGaussian());
+	    		return random.nextInt(3);
+	    	}
+
 	    }
 
 }
