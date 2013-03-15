@@ -798,6 +798,7 @@ public class DataRecorder {
 		gpm.timesPressedRun = getTimesRun();
 		gpm.timeRunningRight = getTotalRightTime();
 		gpm.timeRunningLeft =  getTotalLeftTime();
+
 		gpm.coinsCollected =  getCoinsCollected();
 		gpm.totalCoins = level.COINS+level.BLOCKS_COINS;
 		gpm.emptyBlocksDestroyed = getBlocksEmptyDestroyed();
@@ -810,12 +811,12 @@ public class DataRecorder {
 		gpm.enemyKillByFire = getKillsFire();//Number of Kills by Shooting Enemy
 		gpm.enemyKillByKickingShell = getKillsShell();//Number of Kills by Kicking Shell on Enemy
 		gpm.totalEnemies = level.ENEMIES;
-
 		gpm.totalTimeLittleMode = getTotalLittleTime();
 		gpm.totalTimeLargeMode = getTotalLargeTime();//Time Spent Being Large Mario
 		gpm.totalTimeFireMode = getTotalFireTime();//Time Spent Being Fire Mario
 		gpm.timesSwichingPower = getSwitchedPower();//Number of Times Switched Between Little, Large or Fire Mario
 		gpm.aimlessJumps = J();//aimless jumps
+
 		gpm.percentageBlocksDestroyed = nb();//percentage of all blocks destroyed
 		gpm.percentageCoinBlocksDestroyed = ncb();//percentage of coin blocks destroyed
 		gpm.percentageEmptyBlockesDestroyed = neb();//percentage of empty blocks destroyed
@@ -829,7 +830,6 @@ public class DataRecorder {
 		gpm.timesOfDeathByJumpFlower = deaths[SpriteTemplate.JUMP_FLOWER];
 		gpm.timesOfDeathByCannonBall = deaths[SpriteTemplate.CANNON_BALL];
 		gpm.timesOfDeathByChompFlower = deaths[SpriteTemplate.CHOMP_FLOWER];
-
 		gpm.totalKills = getTotalKills();
 		gpm.RedTurtlesKilled = kills[SpriteTemplate.RED_TURTLE];
 		gpm.GreenTurtlesKilled = kills[SpriteTemplate.GREEN_TURTLE];

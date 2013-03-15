@@ -118,7 +118,7 @@ public class MyLevel extends Level{
 				//length += buildStraight(length, width-length, false);
 				//length += buildHillStraight(length, width-length);
 				//length += buildJump(length, width-length);
-	        	length += buildEasy(length);
+	        	//length += buildEasy(length);
 				//length += buildTubes(length, width-length);
 				//length += buildCannons(length, width-length);
 	        }
@@ -127,7 +127,7 @@ public class MyLevel extends Level{
 
 	        //set the end piece
 	        int floor = height - 1 - random.nextInt(4);
-
+	        System.out.println("Current length is - "+length);
 	        xExit = length + 8;
 	        yExit = floor;
 
@@ -356,6 +356,7 @@ public class MyLevel extends Level{
 	    {	gaps++;
 	    	//jl: jump length
 	    	//js: the number of blocks that are available at either side for free
+
 	        int js = random.nextInt(4) + 2;
 	        int jl = random.nextInt(2) + 2;
 	        int length = js * 2 + jl;
@@ -541,8 +542,8 @@ public class MyLevel extends Level{
 	        for (int x = x0; x < x1; x++)
 	        {
 	        	//enemy generation rate linked to percentage enemies killed in last level
-	        	int thresh = random.nextInt(55 - (int)(5*killerVal));
-	            if (thresh < difficulty)
+	        	int thresh = random.nextInt(55 - (int)(Math.pow(25,killerVal)) - (int)Math.pow(difficulty,1.25));
+	            if (thresh < difficulty+1)
 	            {
 	            	type = generateRandomEnemy(difficulty);
 
@@ -609,7 +610,12 @@ public class MyLevel extends Level{
 
 	    private int buildStraight(int xo, int maxLength, boolean safe)
 	    {
-	        int length = random.nextInt(10-this.difficulty) + 2;
+	        int length = 0;
+	        if(difficulty < 10){
+	        	length = random.nextInt(15-this.difficulty) + 2;
+	        }
+	        else
+	        	length = random.nextInt(3) + 2;
 
 	        if (safe)
 	        	length = 10 + random.nextInt(5);
@@ -665,14 +671,8 @@ public class MyLevel extends Level{
 	        //longer coin sequences for an explorer
 	        int s;
 	        int e;
-	        if(isExplorer){
-	        	s = random.nextInt(6-exploreVal);
-	        	e = random.nextInt(6-exploreVal);
-	        }
-	        else{
-	        	s = random.nextInt(4)+random.nextInt(2);
-	        	e = random.nextInt(4)+random.nextInt(2);
-	        }
+        	s = random.nextInt(5-exploreVal);
+        	e = random.nextInt(5-exploreVal);
 
 	        if (floor - 2 > 0){
 	            if ((xLength - 1 - e) - (xStart + 1 + s) > 1){
@@ -683,14 +683,8 @@ public class MyLevel extends Level{
 	            }
 	        }
 	        //longer block sequences for the explorer
-	        if(isExplorer){
-	        	s = random.nextInt(6-exploreVal);
-	        	e = random.nextInt(6-exploreVal);
-	        }
-	        else{
-	        	s = random.nextInt(4)+random.nextInt(2);
-	        	e = random.nextInt(4)+random.nextInt(2);
-	        }
+	        s = random.nextInt(5-exploreVal);
+        	e = random.nextInt(5-exploreVal);
 	        
 	        //this fills the set of blocks and the hidden objects inside them
 	        if (floor - 4 > 0)
@@ -1034,6 +1028,8 @@ public class MyLevel extends Level{
 	    }
 
 	    private int generateRandomEnemy(int difficulty){
+	    	if(difficulty == 0)
+	    		difficulty++;
 	    	int type = Enemy.ENEMY_GOOMBA;
 
 	    	if(random.nextInt((int)Math.pow(difficulty,1.75)) < difficulty){
